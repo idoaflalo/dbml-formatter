@@ -1,7 +1,7 @@
 {
   "name": "dbml-formatter",
   "displayName": "DBML Formatter - The best and only DBML formatter",
-  "description": "Format .dbml files by parsing and re-exporting DBML using @dbml/core.",
+  "description": "Format .dbml files with ease",
   "version": "0.0.1",
   "repository": {
     "type": "git",
