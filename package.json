@@ -7,7 +7,8 @@
     "type": "git",
     "url": "https://github.com/idoaflalo/dbml-formatter"
   },
-  "publisher": "ido-aflalo",
+  "icon": "assets/icon.png",
+  "publisher": "aflalo",
   "engines": {
     "vscode": "^1.80.0"
   },
