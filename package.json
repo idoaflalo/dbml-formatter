@@ -1,0 +1,46 @@
+{
+  "name": "dbml-formatter",
+  "displayName": "DBML Formatter - The best and only DBML formatter",
+  "description": "Format .dbml files by parsing and re-exporting DBML using @dbml/core.",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/idoaflalo/dbml-formatter"
+  },
+  "publisher": "ido-aflalo",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:dbml"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "dbml",
+        "aliases": [
+          "DBML",
+          "dbml"
+        ],
+        "extensions": [
+          ".dbml"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "publish": "vsce publish",
+    "compile": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^3.2.1"
+  },
+  "dependencies": {
+    "@dbml/core": "^3.9.5"
+  }
+}
