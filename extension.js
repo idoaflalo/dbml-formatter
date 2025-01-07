@@ -12,6 +12,7 @@ function formatLine(line, indentLevel, indentStr) {
 
   trimmed = trimmed.replace(/\s+/g, " ");
   trimmed = trimmed.replace(/\s*\{/g, " {");
+  trimmed = trimmed.replace(/\[\s*(.*?)\s*\]/g, "[$1]");
 
   let newIndentLevel = indentLevel;
   if (trimmed.endsWith("}")) {
