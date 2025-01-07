@@ -1,4 +1,5 @@
 const vscode = require("vscode");
+const { Parser } = require("@dbml/core");
 
 function formatLine(line, indentLevel, indentStr) {
   let trimmed = line.trim();
@@ -47,6 +48,15 @@ function activate(context) {
   const formatter = {
     provideDocumentFormattingEdits(document) {
       const fullText = document.getText();
+      try {
+        const parser = new Parser();
+        parser.parse(fullText, "dbmlv2");
+      } catch (error) {
+        vscode.window.showErrorMessage(
+          `Failed to parse DBML${error.message ? ": " + error.message : ""}`
+        );
+        return [];
+      }
 
       let indentLevel = 0;
       const INDENT_STR = "  ";
