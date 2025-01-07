@@ -2,7 +2,7 @@
   "name": "dbml-formatter",
   "displayName": "DBML Formatter - The best and only DBML formatter",
   "description": "Format .dbml files with ease",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/idoaflalo/dbml-formatter"
@@ -12,7 +12,23 @@
   "engines": {
     "vscode": "^1.80.0"
   },
+  "keywords": [
+    "dbml",
+    "formatter",
+    "database",
+    "sql",
+    "mongodb",
+    "mysql",
+    "postgres",
+    "sqlite",
+    "mariadb",
+    "db2",
+    "oracle",
+    "mssql"
+  ],
   "categories": [
+    "Formatters",
+    "Programming Languages",
     "Other"
   ],
   "activationEvents": [
@@ -41,7 +57,5 @@
     "@types/vscode": "^1.80.0",
     "@vscode/vsce": "^3.2.1"
   },
-  "dependencies": {
-    "@dbml/core": "^3.9.5"
-  }
+  "dependencies": {}
 }
