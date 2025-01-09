@@ -12,7 +12,6 @@ function formatLine(line, indentLevel, indentStr) {
 
   trimmed = trimmed.replace(/\s+/g, " ");
   trimmed = trimmed.replace(/\s*\{/g, " {");
-  trimmed = trimmed.replace(/\[\s*(.*?)\s*\]/g, "[$1]");
 
   let newIndentLevel = indentLevel;
   if (trimmed.endsWith("}")) {
@@ -53,9 +52,25 @@ function activate(context) {
         const parser = new Parser();
         parser.parse(fullText, "dbmlv2");
       } catch (error) {
-        vscode.window.showErrorMessage(
-          `Failed to parse DBML${error.message ? ": " + error.message : ""}`
-        );
+        if (error.diags && Array.isArray(error.diags)) {
+          error.diags.forEach((diag) => {
+            const { message, location, code } = diag;
+            const { start, end } = location;
+
+            const locationMessage =
+              start.line === end.line && start.column === end.column
+                ? `Ln ${start.line}, Col ${start.column}`
+                : `Ln ${start.line}, Col ${start.column} to Ln ${end.line}, Col ${end.column}`;
+
+            vscode.window.showErrorMessage(
+              `Error ${code}: ${message} | ${locationMessage}`
+            );
+          });
+        } else {
+          vscode.window.showErrorMessage(
+            `Failed to parse DBML${error.message ? ": " + error.message : ""}`
+          );
+        }
         return [];
       }
 
