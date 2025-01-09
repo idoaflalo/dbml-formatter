@@ -1,0 +1,5 @@
+                Table               users             {
+_id          ObjectId      [    primary  key ]
+    firstName    string         [   not null            ]
+lastName            string      [   not                         null]
+    }
