@@ -51,7 +51,7 @@
   },
   "scripts": {
     "publish": "vsce publish",
-    "compile": "vsce package",
+    "package": "vsce package",
     "revert-sample": "git checkout HEAD -- test/sample.dbml"
   },
   "devDependencies": {
