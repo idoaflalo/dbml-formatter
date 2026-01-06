@@ -11,7 +11,7 @@ function formatLine(line, indentLevel, indentStr) {
   }
 
   trimmed = trimmed.replace(/\s+/g, " ");
-  trimmed = trimmed.replace(/\s*\{/g, " {");
+  trimmed = addSpaceBeforeOpenBraceOutsideBackticks(trimmed);
   trimmed = trimmed.replace(/\[\s*(.*?)\s*\]/g, "[$1]");
 
   let newIndentLevel = indentLevel;
@@ -27,6 +27,33 @@ function formatLine(line, indentLevel, indentStr) {
     newLine,
     newIndentLevel,
   };
+}
+
+function addSpaceBeforeOpenBraceOutsideBackticks(line) {
+  let result = "";
+  let inBacktick = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === "`") {
+      inBacktick = !inBacktick;
+      result += ch;
+      continue;
+    }
+    if (ch === "{" && !inBacktick) {
+      if (result.length === 0 || result.endsWith(" ")) {
+        // If the { is already at the start of the line (result.length === 0)
+        // or the previous character is already a space (result.endsWith(" ")),
+        // we just append { as‑is.
+        result += "{";
+      } else {
+        result += " {";
+      }
+      continue;
+    }
+  }
+
+  return result;
 }
 
 function insertNewLinesBetweenBlocks(lines) {
