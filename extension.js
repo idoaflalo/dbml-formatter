@@ -1,6 +1,8 @@
 const vscode = require("vscode");
 const { Parser } = require("@dbml/core");
 
+const isQuoteChar = (c) => c === "`" || c === "'" || c === '"';
+
 function formatLine(line, indentLevel, indentStr) {
   let trimmed = line.trim();
   if (!trimmed) {
@@ -31,15 +33,22 @@ function formatLine(line, indentLevel, indentStr) {
 
 function formatBraceSpacing(line) {
   let result = "";
-  let inBackticks = false;
+  let quoteChar = null;
 
-  for (const char of line) {
-    if (char === "`") {
-      inBackticks = !inBackticks;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    const prevChar = line[i - 1];
+
+    if (quoteChar) {
       result += char;
-    } else if (char === "{" && !inBackticks) {
-      const needsSpace = result.length > 0 && !result.endsWith(" ");
-      result += needsSpace ? " {" : "{";
+      if (char === quoteChar && prevChar !== "\\") {
+        quoteChar = null;
+      }
+    } else if (isQuoteChar(char)) {
+      quoteChar = char;
+      result += char;
+    } else if (char === "{") {
+      result += result.length > 0 && !result.endsWith(" ") ? " {" : "{";
     } else {
       result += char;
     }
@@ -50,34 +59,48 @@ function formatBraceSpacing(line) {
 
 function trimBracketWhitespace(line) {
   let result = "";
-  let inBackticks = false;
-  let i = 0;
+  let quoteChar = null;
 
-  while (i < line.length) {
+  for (let i = 0; i < line.length; i++) {
     const char = line[i];
+    const prevChar = line[i - 1];
 
-    if (char === "`") {
-      inBackticks = !inBackticks;
+    if (quoteChar) {
       result += char;
-      i++;
-    } else if (char === "[" && !inBackticks) {
-      let bracketContent = "[";
+      if (char === quoteChar && prevChar !== "\\") {
+        quoteChar = null;
+      }
+    } else if (isQuoteChar(char)) {
+      quoteChar = char;
+      result += char;
+    } else if (char === "[") {
+      let innerContent = "";
+      let innerQuote = null;
       i++;
 
-      while (i < line.length && line[i] !== "]") {
-        bracketContent += line[i];
+      while (i < line.length) {
+        const innerChar = line[i];
+        const innerPrevChar = line[i - 1];
+
+        if (innerQuote) {
+          innerContent += innerChar;
+          if (innerChar === innerQuote && innerPrevChar !== "\\") {
+            innerQuote = null;
+          }
+        } else if (isQuoteChar(innerChar)) {
+          innerQuote = innerChar;
+          innerContent += innerChar;
+        } else if (innerChar === "]") {
+          break;
+        } else {
+          innerContent += innerChar;
+        }
         i++;
       }
 
-      if (i < line.length) {
-        bracketContent += "]";
-        i++;
-      }
-
-      result += bracketContent.replace(/\[\s*(.*?)\s*\]/, "[$1]");
+      result += "[" + innerContent.trim() + "]";
     } else {
       result += char;
-      i++;
     }
   }
 
