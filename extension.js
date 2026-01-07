@@ -11,8 +11,8 @@ function formatLine(line, indentLevel, indentStr) {
   }
 
   trimmed = trimmed.replace(/\s+/g, " ");
-  trimmed = trimmed.replace(/\s*\{/g, " {");
-  trimmed = trimmed.replace(/\[\s*(.*?)\s*\]/g, "[$1]");
+  trimmed = formatBraceSpacing(trimmed);
+  trimmed = trimBracketWhitespace(trimmed);
 
   let newIndentLevel = indentLevel;
   if (trimmed.endsWith("}")) {
@@ -27,6 +27,61 @@ function formatLine(line, indentLevel, indentStr) {
     newLine,
     newIndentLevel,
   };
+}
+
+function formatBraceSpacing(line) {
+  let result = "";
+  let inBackticks = false;
+
+  for (const char of line) {
+    if (char === "`") {
+      inBackticks = !inBackticks;
+      result += char;
+    } else if (char === "{" && !inBackticks) {
+      const needsSpace = result.length > 0 && !result.endsWith(" ");
+      result += needsSpace ? " {" : "{";
+    } else {
+      result += char;
+    }
+  }
+
+  return result;
+}
+
+function trimBracketWhitespace(line) {
+  let result = "";
+  let inBackticks = false;
+  let i = 0;
+
+  while (i < line.length) {
+    const char = line[i];
+
+    if (char === "`") {
+      inBackticks = !inBackticks;
+      result += char;
+      i++;
+    } else if (char === "[" && !inBackticks) {
+      let bracketContent = "[";
+      i++;
+
+      while (i < line.length && line[i] !== "]") {
+        bracketContent += line[i];
+        i++;
+      }
+
+      if (i < line.length) {
+        bracketContent += "]";
+        i++;
+      }
+
+      result += bracketContent.replace(/\[\s*(.*?)\s*\]/, "[$1]");
+    } else {
+      result += char;
+      i++;
+    }
+  }
+
+  return result;
 }
 
 function insertNewLinesBetweenBlocks(lines) {

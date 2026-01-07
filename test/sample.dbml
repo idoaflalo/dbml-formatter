@@ -3,3 +3,20 @@ _id          ObjectId      [    primary  key ]
     firstName    string         [   not null            ]
 lastName            string      [   not                         null]
     }
+
+Table members {
+id ObjectId [pk]
+      name string [not null]
+birth_date string [note: 'format: ^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$']
+
+  checks            {
+                `birth_date IS NULL OR birth_date ~ '^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$'` [name: 'ck_members_birth_date_fmt_valid']
+  }
+}
+
+Table posts{
+    id ObjectId [pk   ]
+title    string [not null  , note: 'max {100} chars' ]
+email string        [     unique, note: 'pattern {1,255}' ]
+phone      string [note:                 'regex: /^\\+[0-9]{1,3}/'         ]
+}
