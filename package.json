@@ -60,5 +60,9 @@
   },
   "dependencies": {
     "@dbml/core": "^5.3.1"
+  },
+  "overrides": {
+    "lodash": "^4.18.1",
+    "lodash-es": "^4.18.1"
   }
 }
