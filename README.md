@@ -59,6 +59,22 @@ Format Document
 ---
 
 ## Configuration
+- **Indentation Size:** By default the formatter indents using the editor's own indentation settings (`editor.tabSize` / `editor.insertSpaces`), so it respects whatever you use for the rest of your files. To force a specific number of spaces regardless of the editor setting, use `dbml-formatter.indentSize`:
+  ```jsonc
+  {
+    // Force 4 spaces per level for DBML files
+    "dbml-formatter.indentSize": 4
+  }
+  ```
+  Leave it unset (`null`) to fall back to `editor.tabSize`. You can also scope the editor setting to DBML only:
+  ```jsonc
+  {
+    "[dbml]": {
+      "editor.tabSize": 4
+    }
+  }
+  ```
+  When the editor is configured to indent with tabs (`editor.insertSpaces` is `false`), the formatter emits one tab per level and `indentSize` is ignored.
 - **Error Handling:** If the parser encounters invalid DBML, the formatter will notify you in VS Code with an error message.
 
 ---

@@ -123,9 +123,31 @@ function insertNewLinesBetweenBlocks(lines) {
   return result;
 }
 
+function resolveIndentStr(document, options) {
+  const config = vscode.workspace.getConfiguration("dbml-formatter", document.uri);
+  const configuredSize = config.get("indentSize");
+
+  // A positive `indentSize` setting takes precedence; otherwise fall back to
+  // the editor's own indentation options (`editor.tabSize` / `editor.insertSpaces`),
+  // which VS Code passes in via `options`.
+  const useSpaces = options ? options.insertSpaces : true;
+  if (!useSpaces) {
+    return "\t";
+  }
+
+  const size =
+    typeof configuredSize === "number" && configuredSize > 0
+      ? configuredSize
+      : options && options.tabSize
+      ? options.tabSize
+      : 2;
+
+  return " ".repeat(size);
+}
+
 function activate(context) {
   const formatter = {
-    provideDocumentFormattingEdits(document) {
+    provideDocumentFormattingEdits(document, options) {
       const fullText = document.getText();
       try {
         const parser = new Parser();
@@ -155,7 +177,7 @@ function activate(context) {
       }
 
       let indentLevel = 0;
-      const INDENT_STR = "  ";
+      const INDENT_STR = resolveIndentStr(document, options);
       const lines = fullText.split("\n");
       const newLines = lines.map((line) => {
         const { newLine, newIndentLevel } = formatLine(
