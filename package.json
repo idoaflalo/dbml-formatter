@@ -47,7 +47,21 @@
           ".dbml"
         ]
       }
-    ]
+    ],
+    "configuration": {
+      "title": "DBML Formatter",
+      "properties": {
+        "dbml-formatter.indentSize": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": null,
+          "minimum": 1,
+          "markdownDescription": "Number of spaces to use per indentation level. When left unset (`null`), the formatter falls back to the editor's `#editor.tabSize#` setting. Ignored when the editor is configured to indent with tabs (`#editor.insertSpaces#` is `false`), in which case a tab character is used per level."
+        }
+      }
+    }
   },
   "scripts": {
     "publish": "vsce publish",
