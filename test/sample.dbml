@@ -21,3 +21,15 @@ email string        [     unique, note: "pattern{1,255}" ]
 phone      string [note:                 'regex: /^\\+[0-9]{1,3}/'         ]
 description string [note: 'contains ] bracket inside']
 }
+
+Table groups {
+  id bigint [pk]
+}
+
+Table chats {
+    id bigint [pk]
+active_chat_id bigint [ref:   >?    groups.id ]
+      owner_id bigint [   ref: ?> groups.id]
+}
+
+Ref:    chats.id     ?-?   groups.id
